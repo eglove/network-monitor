@@ -2,6 +2,7 @@ import {invoke} from "@tauri-apps/api/core";
 import {useQuery} from "@tanstack/react-query";
 import {getPerformanceColorClass, msFormatter} from "../util/formatters.ts";
 import ms from "ms";
+import {Card, CardBody, CardHeader} from "@heroui/react"
 
 type PingResult = {
 	ip: string;
@@ -36,33 +37,27 @@ export const PingResults = () => {
 	return <>
 		{data && (
 			<>
-				<div className="latest-test-info">
-					<div className="latest-test-date">Last Ping Run: {new Date(dataUpdatedAt).toLocaleString(undefined, {
+				<div className="text-right mb-2">
+					<div className="text-sm text-blue-100">Last Ping: {new Date(dataUpdatedAt).toLocaleString(undefined, {
 						dateStyle: 'medium',
 						timeStyle: 'short',
 					})}</div>
 				</div>
-				<div className="ping-results-container">
-					<div className="ping-card">
-						<div className="ping-ip-label ip-cloudflare">
-							Cloudflare (1.1.1.1)
-						</div>
-						<div className={`ping-value ${cfClass}`}>{cfLatency}</div>
-					</div>
+				<div className="grid grid-cols-3 gap-4 mb-4">
+					<Card>
+						<CardHeader className="pb-0 text-sm text-blue-300">CLOUDFLARE (1.1.1.1)</CardHeader>
+						<CardBody className={`text-4xl font-bold ${cfClass}`}>{cfLatency}</CardBody>
+					</Card>
 
-					<div className="ping-card">
-						<div className="ping-ip-label ip-cloudflare">
-							Google (8.8.8.8)
-						</div>
-						<div className={`ping-value ${gClass}`}>{gLatency}</div>
-					</div>
+					<Card>
+						<CardHeader className="pb-0 text-sm text-rose-300">Google (8.8.8.8)</CardHeader>
+						<CardBody className={`text-4xl font-bold ${gClass}`}>{gLatency}</CardBody>
+					</Card>
 
-					<div className="ping-card">
-						<div className="ping-ip-label ip-cloudflare">
-							Level 3 (4.2.2.2)
-						</div>
-						<div className={`ping-value ${l3Class}`}>{l3Latency}</div>
-					</div>
+					<Card>
+						<CardHeader className="pb-0 text-sm text-purple-300">Level 3 (4.2.2.2)</CardHeader>
+						<CardBody className={`text-4xl font-bold ${l3Class}`}>{l3Latency}</CardBody>
+					</Card>
 				</div>
 			</>
 		)}

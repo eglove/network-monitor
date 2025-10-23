@@ -41,6 +41,5 @@ export const runSpeedTest = async () => {
 	});
 
 	const records = await db.getAll('speed-test');
-
 	return records.reverse();
 }
