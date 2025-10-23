@@ -15,7 +15,12 @@ export const msFormatter = new Intl.NumberFormat(undefined, {
 export const getPerformanceColorClass = (metricType: string, value: number | undefined) => {
     if (value === null || value === undefined) return '';
 
-    if (metricType === 'latency' || metricType === 'ping') {
+		if (metricType === 'ping') {
+			if (value <= 30) return 'text-good';
+			if (value <= 50) return 'text-okay';
+			return 'text-bad';
+		}
+    if (metricType === 'latency') {
         if (value <= 70) return 'text-good';
         if (value <= 100) return 'text-okay';
         return 'text-bad';

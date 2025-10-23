@@ -14,7 +14,6 @@ export const Results = () => {
         }
     });
 
-
     return (
         <div>
             <PingResults/>

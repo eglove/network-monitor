@@ -23,7 +23,7 @@ body {
 }
 
 .ping-card {
-    flex: 1 1 0%;
+    flex: 1 1 0;
     padding: 1.25rem;
     background-color: #1f2937;
     border-radius: 0.75rem;
@@ -59,7 +59,6 @@ body {
 .latest-test-info {
     width: 100%;
     max-width: 900px;
-    text-align: right;
     text-align: right;
     margin-bottom: 0.75rem;
     padding-right: 0.5rem;
