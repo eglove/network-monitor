@@ -56,6 +56,21 @@ body {
     color: #9ca3af;
 }
 
+.latest-test-info {
+    width: 100%;
+    max-width: 900px;
+    text-align: right;
+    text-align: right;
+    margin-bottom: 0.75rem;
+    padding-right: 0.5rem;
+}
+
+.latest-test-date {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
 .table-container {
     max-width: 100%;
     overflow-x: auto;
