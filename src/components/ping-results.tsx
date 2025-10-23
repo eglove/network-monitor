@@ -11,7 +11,7 @@ type PingResult = {
 
 export const PingResults = () => {
 	const {data, dataUpdatedAt} = useQuery({
-		refetchInterval: ms('60sec'),
+		refetchInterval: ms('1min'),
 		queryKey: ["ping"],
 		queryFn: async () => {
 			const result = await invoke<PingResult[]>("ping_addresses");

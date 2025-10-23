@@ -7,12 +7,14 @@ import ms from "ms";
 
 export const Results = () => {
     const testResult = useQuery({
-        refetchInterval: ms('5min'),
+        refetchInterval: ms('1hr'),
         queryKey: ["test"],
         queryFn: async () => {
             return runSpeedTest();
         }
     });
+
+	console.log(ms('1min'))
 
     return (
         <div>
@@ -30,7 +32,7 @@ export const Results = () => {
                     </thead>
                     <tbody className="table-body">
                     {testResult.data && testResult.data?.length > 0 && testResult.data?.map(result => {
-                        return <TestResults result={result}/>
+                        return <TestResults key={result.timestamp} result={result}/>
                     })}
                     </tbody>
                 </table>
