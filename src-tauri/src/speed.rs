@@ -26,9 +26,9 @@ const DOWNLOAD_TESTS: [(u64, usize); 5] = [
 ];
 
 const UPLOAD_TESTS: [(usize, usize); 3] = [
-    (11_000, 10),      // 11kB
-    (101_000, 10),     // 101kB
+    (101_000, 10),     // 100kB
     (1_001_000, 8),    // 1MB
+    (10_001_000, 6),   // 10MB
 ];
 
 fn calculate_speed_mbps(bytes: u64, duration_secs: f64) -> f64 {
