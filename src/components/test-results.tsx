@@ -1,49 +1,42 @@
-import {invoke} from "@tauri-apps/api/core";
-import {useQuery} from "@tanstack/react-query";
+import {getPerformanceColorClass, mbpsFormatter, msFormatter} from "../util/formatters.ts";
+import {runSpeedTest} from "../db/speed-test.ts";
 
-type TestResult = {
-    download_mbps: number;
-    upload_mbps: number;
-    latency_ms: number;
-    jitter_ms: number;
-    packet_loss_percent: number;
+type TestResultsProperties = {
+    result: Awaited<ReturnType<typeof runSpeedTest>>[number]
 }
 
-const mbpsFormatter = new Intl.NumberFormat(undefined, {
-    style: "unit",
-    unit: "megabit-per-second",
-    unitDisplay: "short",
-    maximumFractionDigits: 2,
-});
 
-const msFormatter = new Intl.NumberFormat(undefined, {
-    style: "unit",
-    unit: "millisecond",
-    unitDisplay: "short",
-    maximumFractionDigits: 2,
-})
+export const TestResults = ({result}: Readonly<TestResultsProperties>) => {
+    const downloadSpeedString = result.download_mbps ? mbpsFormatter.format(result.download_mbps) : '-';
+    const uploadSpeedString = result.upload_mbps ? mbpsFormatter.format(result.upload_mbps) : '-';
+    const latencyString = result.latency_ms ? msFormatter.format(result.latency_ms) : '-';
+    const jitterString = result.jitter_ms ? msFormatter.format(result.jitter_ms) : '-';
 
-export const TestResults = () => {
-    const {data, isError, isPending, error} = useQuery({
-        queryKey: ["test"],
-        queryFn: async () => {
-            return invoke<TestResult>("run_full_speed_test");
-        },
-        refetchInterval: 60000,
-    })
+    const downloadClass = getPerformanceColorClass('speed', result.download_mbps);
+    const uploadClass = getPerformanceColorClass('upload-speed', result.upload_mbps);
+    const latencyClass = getPerformanceColorClass('latency', result.latency_ms);
+    const jitterClass = getPerformanceColorClass('jitter', result.jitter_ms);
 
-    return <>
-        <h2>Speed Test</h2>
-        {isPending && <div>Loading...</div>}
-        {isError && <div>Error: ${error.message}</div>}
-        {data && <>
-            <div className="resultContainer">
-                <div className="result">Download: {mbpsFormatter.format(data.download_mbps)}</div>
-                <div className="result">Upload: {mbpsFormatter.format(data.upload_mbps)}</div>
-                <div className="result">Latency: {msFormatter.format(data.latency_ms)}</div>
-                <div className="result">Jitter: {msFormatter.format(data.jitter_ms)}</div>
-            </div>
-        </>
-        }
-    </>
+    return (
+        <tr className="table-row">
+            <td className={`table-cell ${downloadClass}`}>
+                {downloadSpeedString}
+            </td>
+            <td className={`table-cell ${uploadClass}`}>
+                {uploadSpeedString}
+            </td>
+            <td className={`table-cell ${latencyClass}`}>
+                {latencyString}
+            </td>
+            <td className={`table-cell ${jitterClass}`}>
+                {jitterString}
+            </td>
+            <td className="table-cell">
+                {result.timestamp ? new Date(result.timestamp).toLocaleString(undefined, {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                }) : '-'}
+            </td>
+        </tr>
+    )
 }

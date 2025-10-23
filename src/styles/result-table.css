@@ -1,0 +1,145 @@
+body {
+    margin: 0;
+}
+
+.app-container {
+    min-height: 100vh;
+    background-color: #111827;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+}
+
+.ping-results-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 900px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ping-card {
+    flex: 1 1 0%;
+    padding: 1.25rem;
+    background-color: #1f2937;
+    border-radius: 0.75rem;
+    border: 1px solid #374151;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+}
+
+.ping-ip-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #9ca3af;
+}
+
+.ping-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: monospace;
+    color: white;
+}
+
+.ping-unit {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-left: 0.25rem;
+    color: #9ca3af;
+}
+
+.table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    border-radius: 0.75rem;
+    border: 1px solid #374151;
+    max-height: 60vh;
+}
+
+.performance-table {
+    min-width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.table-header-row {
+    background-color: #1f2937;
+    color: #9ca3af;
+}
+
+.table-header-row th {
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-header-row th:first-child {
+    border-top-left-radius: 0.75rem;
+}
+
+.table-header-row th:last-child {
+    border-top-right-radius: 0.75rem;
+}
+
+.table-body {
+    border-top: 1px solid #374151;
+}
+
+.table-row {
+    background-color: #111827;
+    transition: background-color 150ms ease-in-out;
+}
+
+.table-row:hover {
+    background-color: #1f2937;
+}
+
+.table-cell {
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: white;
+}
+
+.ip-cloudflare {
+    color: #60a5fa;
+}
+
+.ip-google {
+    color: #4ade80;
+}
+
+.ip-l3 {
+    color: #c084fc;
+}
+
+.text-good {
+    color: #4ade80;
+    font-weight: 700;
+}
+.text-okay {
+    color: #fcd34d;
+    font-weight: 700;
+}
+.text-bad {
+    color: #f87171;
+    font-weight: 700;
+}
+
+
+@media (min-width: 640px) {
+    .app-container {
+        padding: 2.5rem;
+    }
+}

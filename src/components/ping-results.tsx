@@ -1,5 +1,7 @@
 import {invoke} from "@tauri-apps/api/core";
 import {useQuery} from "@tanstack/react-query";
+import {REFETCH_INTERVAL} from "../App.tsx";
+import {getPerformanceColorClass, msFormatter} from "../util/formatters.ts";
 
 type PingResult = {
     ip: string;
@@ -8,29 +10,53 @@ type PingResult = {
 }
 
 export const PingResults = () => {
-    const {data, isPending, isError, error} = useQuery({
+    const {data} = useQuery({
+        refetchInterval: REFETCH_INTERVAL,
         queryKey: ["ping"],
         queryFn: async () => {
-            return invoke<PingResult[]>("ping_addresses");
-        },
-        refetchInterval: 3000,
-    })
+            const result = await invoke<PingResult[]>("ping_addresses");
+
+            return {
+                cloudflarePing: result.find(r => r.ip === '1.1.1.1'),
+                googlePing: result.find(r => r.ip === '8.8.8.8'),
+                l3Ping: result.find(r => r.ip === '4.2.2.2'),
+            }
+        }
+    });
+
+    const cfClass = getPerformanceColorClass('ping', data?.cloudflarePing?.latency_ms);
+    const gClass = getPerformanceColorClass('ping', data?.googlePing?.latency_ms);
+    const l3Class = getPerformanceColorClass('ping', data?.l3Ping?.latency_ms);
+
+
+    const cfLatency = data?.cloudflarePing?.latency_ms ? msFormatter.format(data?.cloudflarePing.latency_ms) : '-';
+    const gLatency = data?.googlePing?.latency_ms ? msFormatter.format(data?.googlePing.latency_ms) : '-';
+    const l3Latency = data?.l3Ping?.latency_ms ? msFormatter.format(data?.l3Ping.latency_ms) : '-';
 
     return <>
-        <h2>Ping</h2>
-        {Array.isArray(data) && data.length > 0 && (
-            <>
-                {isPending && <div>Loading...</div>}
-                {isError && <div>Error: ${error.message}</div>}
-                <div className="resultContainer">
-                    {data?.map((result) => (
-                        <div className={`result ${result.latency_ms <= 30 ? "success" : "fail"}`} key={result.ip}>
-                            <div>{result.ip}</div>
-                            <div>{result.latency_ms}ms</div>
-                        </div>
-                    ))}
+        {data && (
+            <div className="ping-results-container">
+                <div className="ping-card">
+                    <div className="ping-ip-label ip-cloudflare">
+                        Cloudflare (1.1.1.1)
+                    </div>
+                    <div className={`ping-value ${cfClass}`}>{cfLatency}</div>
                 </div>
-            </>
+
+                <div className="ping-card">
+                    <div className="ping-ip-label ip-cloudflare">
+                        Google (8.8.8.8)
+                    </div>
+                    <div className={`ping-value ${gClass}`}>{gLatency}</div>
+                </div>
+
+                <div className="ping-card">
+                    <div className="ping-ip-label ip-cloudflare">
+                        Level 3 (4.2.2.2)
+                    </div>
+                    <div className={`ping-value ${l3Class}`}>{l3Latency}</div>
+                </div>
+            </div>
         )}
     </>
 }
