@@ -5,7 +5,6 @@ import {
 import {Results} from "./components/results.tsx";
 
 const queryClient = new QueryClient();
-export const REFETCH_INTERVAL = 60000 * 5;
 
 function App() {
     return (

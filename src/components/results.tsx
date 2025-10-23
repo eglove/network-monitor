@@ -1,13 +1,13 @@
 // @ts-ignore
 import {useQueries, useQuery} from "@tanstack/react-query";
-import {REFETCH_INTERVAL} from "../App.tsx";
 import {runSpeedTest} from "../db/speed-test.ts";
 import {TestResults} from "./test-results.tsx";
 import {PingResults} from "./ping-results.tsx";
+import ms from "ms";
 
 export const Results = () => {
     const testResult = useQuery({
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: ms('5min'),
         queryKey: ["test"],
         queryFn: async () => {
             return runSpeedTest();

@@ -1,7 +1,7 @@
 import {invoke} from "@tauri-apps/api/core";
 import {useQuery} from "@tanstack/react-query";
-import {REFETCH_INTERVAL} from "../App.tsx";
 import {getPerformanceColorClass, msFormatter} from "../util/formatters.ts";
+import ms from "ms";
 
 type PingResult = {
     ip: string;
@@ -11,7 +11,7 @@ type PingResult = {
 
 export const PingResults = () => {
     const {data} = useQuery({
-        refetchInterval: REFETCH_INTERVAL,
+        refetchInterval: ms('60sec'),
         queryKey: ["ping"],
         queryFn: async () => {
             const result = await invoke<PingResult[]>("ping_addresses");
