@@ -4,6 +4,8 @@ import convert from "convert";
 import {useRef, useState} from "react";
 import {Legend, Line, LineChart, ReferenceLine, XAxis, YAxis} from "recharts";
 import {mbpsFormatter} from "../util/formatters.ts";
+import {getAverage} from "../util/math.ts";
+import {Button} from "@heroui/react";
 
 type NetworkMetric = {
 	name: string
@@ -61,14 +63,17 @@ export const NetworkMetrics = () => {
 		}
 	});
 
-	const currentRx = metrics.at(-1)?.rx ?? 0;
-	const currentTx = metrics.at(-1)?.tx ?? 0;
+	const averageRx = getAverage(metrics.map(m => m.rx));
+	const averageTx = getAverage(metrics.map(m => m.tx));
 
 	return (
 		<div className="grid gap-4 place-items-center">
-			<div>
-				<span className="text-blue-300">{mbpsFormatter.format(currentRx)}</span>{" - "}
-				<span className="text-rose-300">{mbpsFormatter.format(currentTx)}</span>
+			<div className="grid place-items-center">
+				<div>Avg. Down/Up</div>
+				<div>
+					<span className="text-blue-300">{mbpsFormatter.format(averageRx)}</span>{" - "}
+					<span className="text-rose-300">{mbpsFormatter.format(averageTx)}</span>
+				</div>
 			</div>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
@@ -107,6 +112,9 @@ export const NetworkMetrics = () => {
 					strokeDasharray="3 3"
 				/>
 			</LineChart>
+			<Button size="sm" color="danger" onPress={() => {
+				setMetrics([])
+			}}>Clear</Button>
 		</div>
 	);
 }
