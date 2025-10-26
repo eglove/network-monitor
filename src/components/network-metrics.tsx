@@ -72,7 +72,7 @@ export const NetworkMetrics = () => {
 			</div>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
-				<YAxis label={{value: "Mb/s", position: "insideLeft", angle: -90}} width="auto"/>
+				<YAxis label={{value: "MB/s", position: "insideLeft", angle: -90}} width="auto"/>
 				<Line isAnimationActive={false} dataKey="rx" name="RX" stroke="var(--color-blue-300)"/>
 				<Line isAnimationActive={false} dataKey="tx" name="TX" stroke="var(--color-rose-300)"/>
 				<Legend/>
