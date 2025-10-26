@@ -8,6 +8,7 @@ import {getMedian} from "../util/math.ts";
 import {Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@heroui/react";
 import maxBy from "lodash/maxBy";
 import meanBy from "lodash/meanBy";
+import last from "lodash/last";
 
 type NetworkMetric = {
 	name: string
@@ -77,6 +78,7 @@ export const NetworkMetrics = () => {
 			<Table aria-label="Network Metrics" classNames={{table: "table-fixed w-96"}}>
 				<TableHeader>
 					<TableColumn>Metric</TableColumn>
+					<TableColumn>Current</TableColumn>
 					<TableColumn>Avg.</TableColumn>
 					<TableColumn>Max</TableColumn>
 					<TableColumn>Median</TableColumn>
@@ -84,12 +86,14 @@ export const NetworkMetrics = () => {
 				<TableBody>
 					<TableRow key="1" className="text-blue-300">
 						<TableCell>RX</TableCell>
+						<TableCell>{mbpsFormatter.format(last(metrics)?.rx ?? 0)}</TableCell>
 						<TableCell>{mbpsFormatter.format(averageRx)}</TableCell>
 						<TableCell>{mbpsFormatter.format(maxRx)}</TableCell>
 						<TableCell>{mbpsFormatter.format(medianRx)}</TableCell>
 					</TableRow>
 					<TableRow key="2" className="text-rose-300">
 						<TableCell>TX</TableCell>
+						<TableCell>{mbpsFormatter.format(last(metrics)?.tx ?? 0)}</TableCell>
 						<TableCell>{mbpsFormatter.format(averageTx)}</TableCell>
 						<TableCell>{mbpsFormatter.format(maxTx)}</TableCell>
 						<TableCell>{mbpsFormatter.format(medianTx)}</TableCell>
