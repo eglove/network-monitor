@@ -74,7 +74,7 @@ export const NetworkMetrics = () => {
 
 	return (
 		<div className="grid gap-4 place-items-center">
-			<Table aria-label="Network Metrics">
+			<Table aria-label="Network Metrics" classNames={{table: "table-fixed w-96"}}>
 				<TableHeader>
 					<TableColumn>Metric</TableColumn>
 					<TableColumn>Avg.</TableColumn>
