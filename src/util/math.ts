@@ -1,9 +1,10 @@
-export const getAverage = (numbers: number[]) => {
-	const average = numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length;
+export const getMedian = (numbers: number[]) => {
+	const median = numbers.sort((a, b) => a - b)[Math.floor(numbers.length / 2)];
 
-	if (Number.isNaN(average)) {
+	console.log(median)
+	if (Number.isNaN(median) || !median) {
 		return 0;
 	}
 
-	return average;
+	return median;
 }

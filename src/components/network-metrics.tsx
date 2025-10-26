@@ -4,8 +4,10 @@ import convert from "convert";
 import {useRef, useState} from "react";
 import {Legend, Line, LineChart, ReferenceLine, XAxis, YAxis} from "recharts";
 import {mbpsFormatter} from "../util/formatters.ts";
-import {getAverage} from "../util/math.ts";
-import {Button} from "@heroui/react";
+import {getMedian} from "../util/math.ts";
+import {Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@heroui/react";
+import maxBy from "lodash/maxBy";
+import meanBy from "lodash/meanBy";
 
 type NetworkMetric = {
 	name: string
@@ -63,18 +65,37 @@ export const NetworkMetrics = () => {
 		}
 	});
 
-	const averageRx = getAverage(metrics.map(m => m.rx));
-	const averageTx = getAverage(metrics.map(m => m.tx));
+	const averageRx = meanBy(metrics, "rx");
+	const averageTx = meanBy(metrics, "tx");
+	const medianRx = getMedian(metrics.map(m => m.rx));
+	const medianTx = getMedian(metrics.map(m => m.tx));
+	const maxRx = maxBy(metrics, "rx")?.rx ?? 0;
+	const maxTx = maxBy(metrics, "tx")?.tx ?? 0;
 
 	return (
 		<div className="grid gap-4 place-items-center">
-			<div className="grid place-items-center">
-				<div>Avg. Down/Up</div>
-				<div>
-					<span className="text-blue-300">{mbpsFormatter.format(averageRx)}</span>{" - "}
-					<span className="text-rose-300">{mbpsFormatter.format(averageTx)}</span>
-				</div>
-			</div>
+			<Table aria-label="Network Metrics">
+				<TableHeader>
+					<TableColumn>Metric</TableColumn>
+					<TableColumn>Avg.</TableColumn>
+					<TableColumn>Max</TableColumn>
+					<TableColumn>Median</TableColumn>
+				</TableHeader>
+				<TableBody>
+					<TableRow key="1" className="text-blue-300">
+						<TableCell>RX</TableCell>
+						<TableCell>{mbpsFormatter.format(averageRx)}</TableCell>
+						<TableCell>{mbpsFormatter.format(maxRx)}</TableCell>
+						<TableCell>{mbpsFormatter.format(medianRx)}</TableCell>
+					</TableRow>
+					<TableRow key="2" className="text-rose-300">
+						<TableCell>TX</TableCell>
+						<TableCell>{mbpsFormatter.format(averageTx)}</TableCell>
+						<TableCell>{mbpsFormatter.format(maxTx)}</TableCell>
+						<TableCell>{mbpsFormatter.format(medianTx)}</TableCell>
+					</TableRow>
+				</TableBody>
+			</Table>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
 				<YAxis label={{value: "MB/s", position: "insideLeft", angle: -90}} width="auto"/>
