@@ -61,13 +61,13 @@ export const NetworkMetrics = () => {
 		}
 	});
 
-	const currentRx = metrics.at(-1)?.rx;
-	const currentTx = metrics.at(-1)?.tx;
+	const currentRx = metrics.at(-1)?.rx ?? 0;
+	const currentTx = metrics.at(-1)?.tx ?? 0;
 
 	return (
 		<div className="grid gap-4 place-items-center">
-			<div className="text-blue-300">Current RX: {currentRx ? mbpsFormatter.format(currentRx) : '-'}</div>
-			<div className="text-rose-300">Current TX: {currentTx ? mbpsFormatter.format(currentTx) : '-'}</div>
+			<div className="text-blue-300">Current RX: {mbpsFormatter.format(currentRx)}</div>
+			<div className="text-rose-300">Current TX: {mbpsFormatter.format(currentTx)}</div>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
 				<YAxis label={{value: "Mb/s", position: "insideLeft", angle: -90}} width="auto"/>
