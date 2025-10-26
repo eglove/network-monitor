@@ -1,11 +1,9 @@
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {invoke} from "@tauri-apps/api/core";
 import convert from "convert";
 import {useRef, useState} from "react";
-import {Legend, Line, LineChart, ReferenceLine, Tooltip, XAxis, YAxis} from "recharts";
-import {Button, Card, CardBody} from "@heroui/react";
+import {Legend, Line, LineChart, ReferenceLine, XAxis, YAxis} from "recharts";
 import {mbpsFormatter} from "../util/formatters.ts";
-import {runSpeedTest} from "../db/speed-test.ts";
 
 type NetworkMetric = {
 	name: string
@@ -21,25 +19,13 @@ type NetworkMetricConverted = {
 	rx: number
 }
 
-const disableThreshold = 1;
 const MIN_HEALTHY_SPEED_MBPS = 400;
 const MID_HEALTHY_SPEED_MBPS = 700;
 const MAX_HEALTHY_SPEED_MBPS = 1000;
 
 export const NetworkMetrics = () => {
-	const queryClient = useQueryClient();
 	const [metrics, setMetrics] = useState<NetworkMetricConverted[]>([]);
-	const [isRunDisabled, setIsRunDisabled] = useState(false);
 	const prevMetric = useRef<NetworkMetric | null>(null);
-
-	const speedTest = () => {
-		queryClient.fetchQuery({
-			queryKey: ["test"],
-			queryFn: async () => {
-				return runSpeedTest();
-			}
-		}).catch(console.error);
-	}
 
 	useQuery({
 		queryKey: ["network-metrics"],
@@ -56,21 +42,15 @@ export const NetworkMetrics = () => {
 				const rxMbPerS = convert(rxDiffBytes, 'bytes').to('megabits');
 				const txMbPerS = convert(txDiffBytes, 'bytes').to('megabits');
 
-				if (rxMbPerS > disableThreshold) {
-					setIsRunDisabled(true);
-				} else {
-					setIsRunDisabled(false);
-				}
-
 				setMetrics(prev => {
-					const newMetrics = prev.length >= 60 ? prev.slice(1) : prev;
+					const newMetrics = prev.length >= convert(5, 'minutes').to('seconds') ? prev.slice(1) : prev;
 
 					return [
 						...newMetrics,
 						{
 							tx: txMbPerS,
 							rx: rxMbPerS,
-							time: new Date().toLocaleTimeString(undefined, {timeStyle: 'medium'}),
+							time: new Date().toLocaleTimeString(undefined, {timeStyle: 'short'}),
 						}
 					]
 				})
@@ -81,28 +61,18 @@ export const NetworkMetrics = () => {
 		}
 	});
 
+	const currentRx = metrics.at(-1)?.rx;
+	const currentTx = metrics.at(-1)?.tx;
+
 	return (
 		<div className="grid gap-4 place-items-center">
-			<Button isDisabled={isRunDisabled} onPress={speedTest} color="primary">Run
-				Speed Test</Button>
+			<div className="text-blue-300">Current RX: {currentRx ? mbpsFormatter.format(currentRx) : '-'}</div>
+			<div className="text-rose-300">Current TX: {currentTx ? mbpsFormatter.format(currentTx) : '-'}</div>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
 				<YAxis label={{value: "Mb/s", position: "insideLeft", angle: -90}} width="auto"/>
-				<Tooltip content={(props) => {
-					const rxValue = props.payload.find(i => i.name === "RX")?.value;
-					const txValue = props.payload.find(i => i.name === "TX")?.value;
-
-					return (
-						<Card>
-							<CardBody>
-								{rxValue && <div>RX: {mbpsFormatter.format(rxValue)}</div>}
-								{txValue && <div>TX: {mbpsFormatter.format(txValue)}</div>}
-							</CardBody>
-						</Card>
-					)
-				}}/>
-				<Line isAnimationActive={false} dataKey="tx" name="TX" stroke="var(--color-rose-300)"/>
 				<Line isAnimationActive={false} dataKey="rx" name="RX" stroke="var(--color-blue-300)"/>
+				<Line isAnimationActive={false} dataKey="tx" name="TX" stroke="var(--color-rose-300)"/>
 				<Legend/>
 				<ReferenceLine
 					y={MIN_HEALTHY_SPEED_MBPS}
