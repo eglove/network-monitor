@@ -20,7 +20,9 @@ type NetworkMetricConverted = {
     rx: number
 }
 
-const MIN_HEALTHY_SPEED_MBPS = 40;
+const MIN_HEALTHY_SPEED_MBPS = 400;
+const MID_HEALTHY_SPEED_MBPS = 700;
+const MAX_HEALTHY_SPEED_MBPS = 1000;
 
 export const NetworkMetrics = () => {
     const [metrics, setMetrics] = useState<NetworkMetricConverted[]>([]);
@@ -83,13 +85,33 @@ export const NetworkMetrics = () => {
             <ReferenceLine
                 y={MIN_HEALTHY_SPEED_MBPS}
                 label={{
-                    value: `Below ${MIN_HEALTHY_SPEED_MBPS} MB/s (Slow)`,
+                    value: `${MIN_HEALTHY_SPEED_MBPS} MB/s`,
                     position: 'top',
-                    fill: 'red'
+                    fill: 'var(--color-rose-500)'
                 }}
-                stroke="var(--color-red-500)"
+                stroke="var(--color-rose-500)"
                 strokeDasharray="3 3"
             />
+	        <ReferenceLine
+		        y={MID_HEALTHY_SPEED_MBPS}
+		        label={{
+			        value: `${MID_HEALTHY_SPEED_MBPS} MB/s`,
+			        position: 'top',
+			        fill: 'var(--color-yellow-500)'
+		        }}
+		        stroke="var(--color-yellow-500)"
+		        strokeDasharray="3 3"
+	        />
+	        <ReferenceLine
+		        y={MAX_HEALTHY_SPEED_MBPS}
+		        label={{
+			        value: `${MAX_HEALTHY_SPEED_MBPS} MB/s`,
+			        position: 'top',
+			        fill: 'var(--color-green-500)'
+		        }}
+		        stroke="var(--color-green-500)"
+		        strokeDasharray="3 3"
+	        />
         </LineChart>
     );
 }
