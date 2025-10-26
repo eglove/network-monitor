@@ -102,14 +102,14 @@ export const NetworkMetrics = () => {
 			</Table>
 			<LineChart data={metrics} width={600} height={300}>
 				<XAxis dataKey="time"/>
-				<YAxis label={{value: "MB/s", position: "insideLeft", angle: -90}} width="auto"/>
+				<YAxis label={{value: "Mb/s", position: "insideLeft", angle: -90}} width="auto"/>
 				<Line isAnimationActive={false} dataKey="rx" name="RX" stroke="var(--color-blue-300)"/>
 				<Line isAnimationActive={false} dataKey="tx" name="TX" stroke="var(--color-rose-300)"/>
 				<Legend/>
 				<ReferenceLine
 					y={MIN_HEALTHY_SPEED_MBPS}
 					label={{
-						value: `${MIN_HEALTHY_SPEED_MBPS} MB/s`,
+						value: mbpsFormatter.format(MIN_HEALTHY_SPEED_MBPS),
 						position: 'top',
 						fill: 'var(--color-rose-500)'
 					}}
@@ -119,7 +119,7 @@ export const NetworkMetrics = () => {
 				<ReferenceLine
 					y={MID_HEALTHY_SPEED_MBPS}
 					label={{
-						value: `${MID_HEALTHY_SPEED_MBPS} MB/s`,
+						value: mbpsFormatter.format(MID_HEALTHY_SPEED_MBPS),
 						position: 'top',
 						fill: 'var(--color-yellow-500)'
 					}}
@@ -129,7 +129,7 @@ export const NetworkMetrics = () => {
 				<ReferenceLine
 					y={MAX_HEALTHY_SPEED_MBPS}
 					label={{
-						value: `${MAX_HEALTHY_SPEED_MBPS} MB/s`,
+						value: mbpsFormatter.format(MAX_HEALTHY_SPEED_MBPS),
 						position: 'top',
 						fill: 'var(--color-green-500)'
 					}}

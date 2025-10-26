@@ -1,14 +1,9 @@
 export const mbpsFormatter = new Intl.NumberFormat(undefined, {
 	style: "unit",
-	unit: "megabyte-per-second",
+	unit: "megabit-per-second",
 	unitDisplay: "short",
 	maximumFractionDigits: 2,
-});
-
-export const mbFormatter = new Intl.NumberFormat(undefined, {
-	style: "unit",
-	unit: "megabyte",
-	maximumFractionDigits: 2,
+	minimumFractionDigits: 2,
 });
 
 export const msFormatter = new Intl.NumberFormat(undefined, {
