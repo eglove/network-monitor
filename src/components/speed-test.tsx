@@ -2,7 +2,7 @@ import {Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow}
 import {useMutation} from "@tanstack/react-query";
 import {invoke} from "@tauri-apps/api/core";
 import convert from "convert";
-import {mbpsFormatter, msFormatter} from "../util/formatters.ts";
+import {mbpsFormatter, msFormatter, percentFormatter} from "../util/formatters.ts";
 
 type SpeedTest = {
 	type: string
@@ -115,7 +115,7 @@ export const SpeedTest = () => {
 					</TableRow>
 					<TableRow>
 						<TableCell>Packet Loss</TableCell>
-						<TableCell>{data?.packetLoss}</TableCell>
+						<TableCell>{percentFormatter.format(data?.packetLoss ?? 0)}</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell>Download</TableCell>

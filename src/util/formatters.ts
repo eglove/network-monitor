@@ -13,6 +13,11 @@ export const msFormatter = new Intl.NumberFormat(undefined, {
 	maximumFractionDigits: 2,
 })
 
+export const percentFormatter = new Intl.NumberFormat(undefined, {
+	style: "percent",
+	maximumFractionDigits: 2,
+})
+
 export const getPerformanceColorClass = (metricType: 'ping' | 'latency' | 'jitter' | 'speed' | 'upload-speed', value: number | undefined) => {
 	if (value === null || value === undefined) return '';
 
