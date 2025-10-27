@@ -2,7 +2,7 @@ import {useQuery} from "@tanstack/react-query";
 import {invoke} from "@tauri-apps/api/core";
 import convert from "convert";
 import {useRef, useState} from "react";
-import {Legend, Line, LineChart, ReferenceLine, XAxis, YAxis} from "recharts";
+import {Legend, Line, LineChart, XAxis, YAxis} from "recharts";
 import {mbpsFormatter} from "../util/formatters.ts";
 import {getMedian} from "../util/math.ts";
 import {Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@heroui/react";
@@ -23,10 +23,6 @@ type NetworkMetricConverted = {
 	tx: number
 	rx: number
 }
-
-const MIN_HEALTHY_SPEED_MBPS = 400;
-const MID_HEALTHY_SPEED_MBPS = 700;
-const MAX_HEALTHY_SPEED_MBPS = 1000;
 
 export const NetworkMetrics = () => {
 	const [metrics, setMetrics] = useState<NetworkMetricConverted[]>([]);
@@ -57,7 +53,7 @@ export const NetworkMetrics = () => {
 							rx: rxMbPerS,
 							time: new Date().toLocaleTimeString(undefined, {timeStyle: 'short'}),
 						}
-					]
+					].filter(m => m.rx >=0 && m.tx >= 0);
 				})
 			}
 
@@ -106,36 +102,6 @@ export const NetworkMetrics = () => {
 				<Line isAnimationActive={false} dataKey="rx" name="RX" stroke="var(--color-blue-300)"/>
 				<Line isAnimationActive={false} dataKey="tx" name="TX" stroke="var(--color-rose-300)"/>
 				<Legend/>
-				<ReferenceLine
-					y={MIN_HEALTHY_SPEED_MBPS}
-					label={{
-						value: mbpsFormatter.format(MIN_HEALTHY_SPEED_MBPS),
-						position: 'top',
-						fill: 'var(--color-rose-500)'
-					}}
-					stroke="var(--color-rose-500)"
-					strokeDasharray="3 3"
-				/>
-				<ReferenceLine
-					y={MID_HEALTHY_SPEED_MBPS}
-					label={{
-						value: mbpsFormatter.format(MID_HEALTHY_SPEED_MBPS),
-						position: 'top',
-						fill: 'var(--color-yellow-500)'
-					}}
-					stroke="var(--color-yellow-500)"
-					strokeDasharray="3 3"
-				/>
-				<ReferenceLine
-					y={MAX_HEALTHY_SPEED_MBPS}
-					label={{
-						value: mbpsFormatter.format(MAX_HEALTHY_SPEED_MBPS),
-						position: 'top',
-						fill: 'var(--color-green-500)'
-					}}
-					stroke="var(--color-green-500)"
-					strokeDasharray="3 3"
-				/>
 			</LineChart>
 			<Button size="sm" color="danger" onPress={() => {
 				setMetrics([])
