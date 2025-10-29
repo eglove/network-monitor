@@ -1,4 +1,4 @@
-import {Button, Switch, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@heroui/react";
+import {Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@heroui/react";
 import {useMutation} from "@tanstack/react-query";
 import {invoke} from "@tauri-apps/api/core";
 import convert from "convert";
@@ -91,20 +91,10 @@ export const SpeedTest = () => {
     return (
         <div className="grid place-items-center gap-4">
             <Table aria-label="Speed Test" topContent={
-                <div className="grid gap-4 grid-cols-2 place-items-center">
+                <div className="grid gap-4 place-items-center">
                     <Button className="w-max" isLoading={isPending} onPress={() => mutate()} color="primary">Speed
                         Test
                     </Button>
-                    <Switch
-                        color="primary"
-                        onChange={(event) => {
-                           if (event.target.checked) {
-                               invoke("set_bandwidth_limit").catch(console.error);
-                           } else {
-                               invoke("clear_bandwidth_limit").catch(console.error);
-                           }
-                        }}
-                    >Throttle ({mbpsFormatter.format(100)})</Switch>
                 </div>
             }>
                 <TableHeader>
